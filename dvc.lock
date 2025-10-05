@@ -17,16 +17,16 @@ stages:
       md5: bc9c9f46a949459ae0cce7b4ba9c3ac3
       size: 1774665
   features:
-    cmd: python scripts/featureEngineering.py
+    cmd: python scripts/features.py
     deps:
     - path: data/processed.csv
       hash: md5
       md5: bc9c9f46a949459ae0cce7b4ba9c3ac3
       size: 1774665
-    - path: scripts/featureEngineering.py
+    - path: scripts/features.py
       hash: md5
-      md5: cff8cc92b77ed1bf9f885295272de78f
-      size: 2754
+      md5: 9c072ac9646208ccf8d49a244e5f34a5
+      size: 2733
     outs:
     - path: data/features.csv
       hash: md5

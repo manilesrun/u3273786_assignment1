@@ -1,67 +1,37 @@
-1. Setup
-   Prerequisites
+## Setup
 
-   - Python 3.9+
-   - Java + PySpark to run the Spark models
+**Requirements**
 
-   # Install dependencies
+- Python 3.9+
+- (Optional) Java + PySpark for Spark models
 
-   pip install -r requirements.txt
+**Install**
 
-2. How to Run
+```bash
+pip install -r requirements.txt
 
-Reproduce with DVC
+```
 
-This runs the full pipeline defined in dvc.yaml:
+## Reproduce (DVC)
 
-dvc init
+**Fetch tracked data/models and run the full pipeline**
 
+```bash
+dvc pull
 dvc repro
 
-3. What Results to Expect
+```
 
-Processed & feature data
+## Expected Results (baseline)
 
-data/processed.csv (cleaned)
+### Regression (scikit-learn)
 
-data/features.csv (model-ready features: e.g., cuisine*diversity, cost_bin/encoded, subzone_freq, multi-label type*\* dummies)
+- **Linear Regression** — MSE ≈ **0.088**, R² ≈ **0.435**
+- **SGD Regression** — MSE ≈ **0.088**, R² ≈ **0.435**
 
-Models & metrics
+### Classification
 
-Regression models: models/linreg.pkl, models/gdreg.pkl
-
-Classification models: models/logreg.pkl, models/svm.pkl, models/rf.pkl, models/nn.pkl
-
-Regression metrics: artifacts/regression_metrics.json (MSE, R²)
-
-Classification metrics: artifacts/classification_metrics.json (accuracy, precision, recall, F1)
-
-Summary: artifacts/summary.md
-
-Typical outcomes (example)
-
-Regression (sklearn): MSE ≈ 0.0887, R² ≈ 0.436
-
-Classification: accuracy ≈ 0.85–0.86
-
-Random Forest: best overall balance (e.g., Acc ≈ 0.857)
-
-Logistic Regression: highest Class-1 recall (e.g., 0.83) if you care about catching positives
-
-PySpark (optional):
-
-RF Accuracy ≈ 0.866 (very close to sklearn)
-
-Linear Regression MSE ≈ 0.0976 (slightly worse than sklearn; tune/scaling can narrow the gap)
-
-Visualisations (Part A)
-
-Distributions (cost, ratings, types)
-
-Top suburbs by restaurant count
-
-Cost vs votes relationship (weak positive trend, high variance)
-
-Geospatial: cuisine density per suburb from sydney.geojson
-
-Interactive: one key insight re-plotted with Plotly/Bokeh and a short explanation
+- **Logistic Regression** — Acc **0.84**
+- **SVM (Linear)** — Acc **0.847**
+- **Random Forest** — Acc **0.856**_(best overall balance)_
+- **Neural Network** — Acc **0.855**

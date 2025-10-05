@@ -1,0 +1,3 @@
+artifacts/*.json
+data/*.csv
+models/*.pkl
