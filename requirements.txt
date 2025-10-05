@@ -1,0 +1,15 @@
+
+pandas
+numpy
+
+matplotlib
+plotly
+
+geopandas
+
+
+
+scikit-learn
+pyspark
+
+dvc

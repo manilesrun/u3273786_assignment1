@@ -1,0 +1,34 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python scripts/preprocess.py
+    deps:
+    - path: data/zomato_df_final_data.csv
+      hash: md5
+      md5: 6bb696eac5889d15f134cee5ff09eb5d
+      size: 2690897
+    - path: scripts/preprocess.py
+      hash: md5
+      md5: a5aad498ad9150797b010a6c4a84490a
+      size: 667
+    outs:
+    - path: data/processed.csv
+      hash: md5
+      md5: 2a16d0a6e88dc110253390f9192c1438
+      size: 1858623
+  features:
+    cmd: python scripts/features.py
+    deps:
+    - path: data/processed.csv
+      hash: md5
+      md5: 2a16d0a6e88dc110253390f9192c1438
+      size: 1858623
+    - path: scripts/features.py
+      hash: md5
+      md5: 6be5a269fcad136f8351937c32128d74
+      size: 418
+    outs:
+    - path: data/features.csv
+      hash: md5
+      md5: c0c65198ab8e602cd830b16d9636a3df
+      size: 1910086

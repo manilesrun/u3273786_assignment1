@@ -1,0 +1,32 @@
+stages:
+  preprocess:
+    cmd: python scripts/preprocess.py
+    deps:
+      - scripts/preprocess.py
+      - data/zomato_df_final_data.csv
+    outs:
+      - data/processed.csv
+
+  features:
+    cmd: python scripts/features.py
+    deps:
+      - scripts/features.py
+      - data/processed.csv
+    outs:
+      - data/features.csv
+
+  regression:
+    cmd: python scripts/regression.py
+    deps:
+      - scripts/regression.py
+      - data/features.csv
+    outs:
+      - models/regression.pkl
+
+  classification:
+    cmd: python scripts/classification.py
+    deps:
+      - scripts/classification.py
+      - data/features.csv
+    outs:
+      - models/classifier.pkl
