@@ -9,26 +9,106 @@ stages:
       size: 2690897
     - path: scripts/preprocess.py
       hash: md5
-      md5: a5aad498ad9150797b010a6c4a84490a
-      size: 667
+      md5: 2d2176785ea63cd58f2cdf41db35676a
+      size: 742
     outs:
     - path: data/processed.csv
       hash: md5
-      md5: 2a16d0a6e88dc110253390f9192c1438
-      size: 1858623
+      md5: bc9c9f46a949459ae0cce7b4ba9c3ac3
+      size: 1774665
   features:
-    cmd: python scripts/features.py
+    cmd: python scripts/featureEngineering.py
     deps:
     - path: data/processed.csv
       hash: md5
-      md5: 2a16d0a6e88dc110253390f9192c1438
-      size: 1858623
-    - path: scripts/features.py
+      md5: bc9c9f46a949459ae0cce7b4ba9c3ac3
+      size: 1774665
+    - path: scripts/featureEngineering.py
       hash: md5
-      md5: 6be5a269fcad136f8351937c32128d74
-      size: 418
+      md5: cff8cc92b77ed1bf9f885295272de78f
+      size: 2754
     outs:
     - path: data/features.csv
       hash: md5
-      md5: c0c65198ab8e602cd830b16d9636a3df
-      size: 1910086
+      md5: 3d515b23bb4e68f59fdbd04971070580
+      size: 580467
+  regression:
+    cmd: python scripts/regression.py
+    deps:
+    - path: data/features.csv
+      hash: md5
+      md5: 3d515b23bb4e68f59fdbd04971070580
+      size: 580467
+    - path: scripts/regression.py
+      hash: md5
+      md5: bb987f10f6f79371fd3c12a3f98c7ecc
+      size: 1574
+    outs:
+    - path: models/gdreg.pkl
+      hash: md5
+      md5: bfb8e4798e1019a6b5d04de009c97a43
+      size: 2215
+    - path: models/linreg.pkl
+      hash: md5
+      md5: b2a9adde3d7151e6be6954e210f4ba37
+      size: 1168
+  classification:
+    cmd: python scripts/classification.py
+    deps:
+    - path: data/features.csv
+      hash: md5
+      md5: 3d515b23bb4e68f59fdbd04971070580
+      size: 580467
+    - path: scripts/classification.py
+      hash: md5
+      md5: 74172b73a1fe1ef8f6185e6f3f5ec1e7
+      size: 2707
+    outs:
+    - path: models/logreg.pkl
+      hash: md5
+      md5: b1bb4357ccaabb9b75c4b1e4bf0c76e5
+      size: 1309
+    - path: models/rf.pkl
+      hash: md5
+      md5: 8c516551f7dbb74dfba93c9971cdada2
+      size: 27139196
+    - path: models/svm.pkl
+      hash: md5
+      md5: d699e36cef4017cc812d85f9902a25db
+      size: 405630
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: data/features.csv
+      hash: md5
+      md5: 3d515b23bb4e68f59fdbd04971070580
+      size: 580467
+    - path: models/gdreg.pkl
+      hash: md5
+      md5: bfb8e4798e1019a6b5d04de009c97a43
+      size: 2215
+    - path: models/linreg.pkl
+      hash: md5
+      md5: b2a9adde3d7151e6be6954e210f4ba37
+      size: 1168
+    - path: models/logreg.pkl
+      hash: md5
+      md5: b1bb4357ccaabb9b75c4b1e4bf0c76e5
+      size: 1309
+    - path: models/rf.pkl
+      hash: md5
+      md5: 8c516551f7dbb74dfba93c9971cdada2
+      size: 27139196
+    - path: models/svm.pkl
+      hash: md5
+      md5: d699e36cef4017cc812d85f9902a25db
+      size: 405630
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: 9900ac9699901b9b63821a497155addb
+      size: 3395
+    outs:
+    - path: artifacts/summary.md
+      hash: md5
+      md5: 07329cd5538c66c735447cd0f10f18ac
+      size: 588
