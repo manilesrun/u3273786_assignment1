@@ -1,29 +1,48 @@
-# scripts/regression.py
+import os, pickle
+import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, SGDRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import make_pipeline
 from sklearn.metrics import mean_squared_error, r2_score
 
-# Load processed + engineered features
-df = pd.read_csv("data/features.csv")
+INP = "data/features.csv"
 
-# Drop non-numeric or target columns
-drop_cols = ["rating_text", "address", "link", "phone", "title", "cuisine"]
-X = df.drop(columns=drop_cols + ["rating_number"], errors="ignore")
+os.makedirs("models", exist_ok=True)
+
+# 1) Load
+df = pd.read_csv(INP)
+
+# 2) Split features/target
 y = df["rating_number"]
+X = df.drop(columns=[c for c in ["rating_number", "rating_text"] if c in df.columns])
+X = X.select_dtypes(include=[np.number]).copy()
 
-# Train/test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# 3) Train/test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
-# Model
-model = LinearRegression()
-model.fit(X_train, y_train)
+# 4) Model A — Linear Regression (OLS)
+lin_reg = LinearRegression().fit(X_train, y_train)
+y_pred_lin = lin_reg.predict(X_test)
+mse_lin = mean_squared_error(y_test, y_pred_lin)
+r2_lin  = r2_score(y_test, y_pred_lin)
 
-# Evaluate
-y_pred = model.predict(X_test)
-print("✅ Regression complete")
-print("MSE:", mean_squared_error(y_test, y_pred))
-print("R²:", r2_score(y_test, y_pred))
+# 5) Model B — SGD (gradient descent) with scaling
+sgd_reg = make_pipeline(
+    StandardScaler(),
+    SGDRegressor(max_iter=1000, tol=1e-3, eta0=0.01, random_state=42)
+).fit(X_train, y_train)
+y_pred_sgd = sgd_reg.predict(X_test)
+mse_sgd = mean_squared_error(y_test, y_pred_sgd)
+r2_sgd  = r2_score(y_test, y_pred_sgd)
 
-# Save predictions
-pd.DataFrame({"y_test": y_test, "y_pred": y_pred}).to_csv("data/regression_results.csv", index=False)
+# 6) Save models only
+with open("models/linreg.pkl","wb") as f: pickle.dump(lin_reg, f)
+with open("models/gdreg.pkl","wb") as f:   pickle.dump(sgd_reg, f)
+
+# 7) Print metrics
+print(f"[regression] OLS -> MSE: {mse_lin:.6f}  R2: {r2_lin:.3f}")
+print(f"[regression] SGD -> MSE: {mse_sgd:.6f}  R2: {r2_sgd:.3f}")
