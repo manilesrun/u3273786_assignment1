@@ -21,7 +21,8 @@ stages:
       - scripts/regression.py
       - data/features.csv
     outs:
-      - models/regression.pkl
+      - models/linreg.pkl
+      - models/gdreg.pkl
 
   classification:
     cmd: python scripts/classification.py
@@ -29,4 +30,19 @@ stages:
       - scripts/classification.py
       - data/features.csv
     outs:
-      - models/classifier.pkl
+      - models/logreg.pkl
+      - models/svm.pkl
+      - models/rf.pkl
+
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+      - scripts/evaluate.py
+      - data/features.csv
+      - models/linreg.pkl
+      - models/gdreg.pkl
+      - models/logreg.pkl
+      - models/svm.pkl
+      - models/rf.pkl
+    outs:
+      - artifacts/summary.md
